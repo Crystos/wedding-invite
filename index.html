@@ -58,7 +58,7 @@
             <h2>Подтверждение участия</h2>
             <input type="text" name="name" placeholder="ФИО" required>
             <input type="tel" name="phone" placeholder="+7XXXXXXXXXX" pattern="^\+7\d{10}$" title="Обязательно начинается с +7 и 10 цифр" required>
-            <input type="email" name="email" placeholder="Ваш email" required>
+            <input type="vk" name="vk" placeholder="Ссылка на ваш VK" required>
 
             <label class="checkbox-label">
                 <input type="checkbox" id="plusOne"> +1 (если у +1 нет своего приглашения)
@@ -67,6 +67,7 @@
             <div id="plusOneFields" class="hidden">
                 <input type="text" name="plus_name" placeholder="ФИО гостя +1">
                 <input type="tel" name="plus_phone" placeholder="+7XXXXXXXXXX" pattern="^\+7\d{10}$">
+                <input type="vk" name="plus_vk" placeholder="Ссылка на VK гостя +1" required>
             </div>
 
             <button type="submit" id="submitBtn" class="submit-btn">Отправить</button>

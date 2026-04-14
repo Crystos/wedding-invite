@@ -1,13 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { name, phone, email, plus_name, plus_phone, plus_email } = req.body;
+  const { name, phone, vk, plus_name, plus_phone, plus_vk } = req.body;
   const VK_TOKEN = process.env.VK_GROUP_TOKEN;
   const VK_GROUP_ID = process.env.VK_GROUP_ID;
   const VK_ADMIN_ID = process.env.VK_ADMIN_USER_ID;
 
   // Текст уведомления
-  const msg = `🖤 Новая RSVP\n👤 ${name}\n📞 ${phone}\n📧 ${email}\n${plus_name ? `➕ ${plus_name} (${plus_phone})` : '❌ Без +1'}`;
+  const msg = `🖤 Новый гость\n👤 ${name}\n📞 ${phone}\n📧 ${vk}\n${plus_name ? `➕ ${plus_name} (${plus_phone}) (VK: ${plus_vk})` : '❌ Без +1'}`;
 
   try {
     // Отправка через VK API
