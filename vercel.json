@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/send-invite.js": {
+      "maxDuration": 30
+    }
+  }
+}
