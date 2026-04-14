@@ -1,0 +1,227 @@
+:root { --bg: #050505; --text: #e0e0e0; --accent: #ffffff; --border: #333; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+
+.hero { display: flex; flex-direction: column; align-items: center; padding: 10vh 20px 4vh; text-align: center; }
+.title { font-size: 7rem; font-weight: 300; margin-bottom: 0.5rem; animation: infinityPulse 4s infinite ease-in-out; }
+@keyframes infinityPulse { 0%,100%{transform:scale(1);opacity:0.85} 50%{transform:scale(1.08);opacity:1} }
+.subtitle { font-size: 1.6rem; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 0.5rem; }
+.date { font-size: 1rem; opacity: 0.7; letter-spacing: 2px; }
+.underdate { font-size: 1.2rem; opacity: 0.7; letter-spacing: 2px; }
+
+/* Основная сетка */
+.collage {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Общие стили изображений */
+.collage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    filter: grayscale(100%) brightness(0.8);
+    transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.collage img:hover {
+    filter: grayscale(0%) brightness(1);
+    transform: translateY(-3px) scale(1.01);
+}
+
+/* Позиционирование по сетке */
+.collage img:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    aspect-ratio: 1 / 2; /* Высокий прямоугольник */
+}
+
+.collage img:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    aspect-ratio: 1 / 1; /* Квадрат */
+}
+
+.collage img:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    aspect-ratio: 1 / 1; /* Квадрат */
+}
+
+.collage img:nth-child(4) {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    aspect-ratio: 1 / 2; /* Высокий прямоугольник */
+}
+
+.info { text-align: center; margin: 50px 0 40px; opacity: 0.8; }
+.info p { margin: 8px 0; font-size: 1.1rem; letter-spacing: 1px; }
+
+.cta-btn {
+    padding: 14px 44px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 2px;
+    /* Убираем block и margin, чтобы кнопки стояли в ряд */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+.cta-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+dialog { 
+    border: none; 
+    border-radius: 6px; 
+    background: #0a0a0a; 
+    color: var(--text); 
+    width: 92%; 
+    max-width: 440px; 
+    box-shadow: 0 12px 40px rgba(0,0,0,0.9); 
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px 24px;
+    z-index: 1000;
+}
+dialog::backdrop { 
+    background: rgba(0,0,0,0.75); 
+    backdrop-filter: blur(6px); 
+}
+
+form { display: flex; flex-direction: column; gap: 12px; }
+form input { padding: 12px; background: #111; border: 1px solid var(--border); color: var(--text); border-radius: 4px; outline: none; font-size: 0.95rem; }
+form input:focus { border-color: var(--accent); }
+.checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 8px 0; }
+.hidden { display: none !important; }
+.submit-btn { padding: 14px; background: var(--accent); color: var(--bg); border: none; cursor: pointer; font-weight: 500; margin-top: 8px; transition: opacity 0.2s; }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.close-btn { margin-top: 12px; padding: 10px; background: transparent; border: 1px solid #444; color: #888; cursor: pointer; width: 100%; }
+
+
+/* Таймер обратного отсчёта */
+.countdown {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.countdown-value {
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--accent);
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.countdown-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 300;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+@media (max-width: 600px) {
+    .countdown {
+        gap: 20px;
+    }
+    .countdown-value {
+        font-size: 2.2rem;
+    }
+    .countdown-label {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* 📦 Контейнер для выравнивания обеих кнопок */
+.btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 0 auto 60px;
+    width: fit-content;
+}
+
+/* ❓ Кнопка со знаком вопроса */
+.info-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 1.3rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+.info-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+    transform: scale(1.05);
+}
+
+/* Оформление контента внутри окна */
+#infoModal .info-content { padding: 10px 0; text-align: left; }
+#infoModal .info-title { font-size: 1.3rem; font-weight: 400; margin-bottom: 20px; color: var(--accent); letter-spacing: 0.5px; }
+#infoModal p { margin-bottom: 16px; line-height: 1.5; font-size: 0.95rem; opacity: 0.9; }
+#infoModal p strong { color: var(--accent); }
+
+@media (max-width: 768px) {
+    .collage {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 10px;
+    }
+    /* На телефоне всё выстраивается в удобную сетку 2x2 или 1x4 */
+    .collage img {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        aspect-ratio: 3/4 !important;
+        height: 220px;
+    }
+}

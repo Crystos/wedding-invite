@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свадьба 14.08.2026 | ∞</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 4. Яндекс.Метрика -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        // 🔧 ЗАМЕНИТЕ YOUR_YM_ID на ваш счётчик из Метрики
+        ym(YOUR_YM_ID, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
+    </script>
+</head>
+<body>
+    <header class="hero">
+        <h1 class="title">∞</h1>
+        <p class="subtitle">Игорь & Светлана</p>
+        <p class="date">14 августа 2026 • 19:00</p>
+        <p class="underdate">до того, как мы скажем</p>
+        <p class="underdate">"Да"</p>
+    </header>
+
+    <div class="countdown" id="countdown">
+        <div class="countdown-item">
+            <span class="countdown-value" id="days">00</span>
+            <span class="countdown-label">дней</span>
+        </div>
+        <div class="countdown-item">
+            <span class="countdown-value" id="hours">00</span>
+            <span class="countdown-label">часов</span>
+        </div>
+        <div class="countdown-item">
+            <span class="countdown-value" id="minutes">00</span>
+            <span class="countdown-label">минут</span>
+        </div>
+        <div class="countdown-item">
+            <span class="countdown-value" id="seconds">00</span>
+            <span class="countdown-label">секунд</span>
+        </div>
+    </div>
+
+    <section class="info">        
+        <p>Место: Пермь, загородный клуб "Тёрн"</p>
+        <p>Дресс-код: <strong>Total Black</strong></p>
+    </section>
+
+    <div class="btn-container">
+        <button id="openForm" class="cta-btn">Я приеду</button>
+        <button id="openInfo" class="info-btn" aria-label="Информация для гостей">?</button>
+    </div>
+
+    <dialog id="inviteModal">
+        <form id="guestForm">
+            <h2>Подтверждение участия</h2>
+            <input type="text" name="name" placeholder="ФИО" required>
+            <input type="tel" name="phone" placeholder="+7XXXXXXXXXX" pattern="^\+7\d{10}$" title="Обязательно начинается с +7 и 10 цифр" required>
+            <input type="email" name="email" placeholder="Ваш email" required>
+
+            <label class="checkbox-label">
+                <input type="checkbox" id="plusOne"> +1 (если у +1 нет своего приглашения)
+            </label>
+
+            <div id="plusOneFields" class="hidden">
+                <input type="text" name="plus_name" placeholder="ФИО гостя +1">
+                <input type="tel" name="plus_phone" placeholder="+7XXXXXXXXXX" pattern="^\+7\d{10}$">
+            </div>
+
+            <button type="submit" id="submitBtn" class="submit-btn">Отправить</button>
+        </form>
+        <button id="closeModal" class="close-btn">Закрыть</button>
+    </dialog>
+
+    <dialog id="infoModal">
+        <div class="info-content">
+            <p class="info-title">Дорогие гости, писькой не елозьте!</p>
+            <p>Для регистрации нажмите <strong>«Я приеду»</strong>, заполните данные и подтвердите участие</p>
+            <p>🖤 Мы организуем для вас трансфер из города до места проведения свадьбы
+            <p>🖤 Дресс-код: <strong>Total Black</strong>. Примеры образов — на главной странице</p>
+            <p>🖤 Ваши улыбки и смех подарят нам незабываемое счастье в это день! А пожелания в конвертах помогут осуществить мечты</p>
+            <button id="closeInfo" class="close-btn">Понятно</button>
+        </div>
+    </dialog>
+
+    <section class="collage-container">
+        <div class="collage">
+            <!-- 1. Слева (высокое) -->
+            <img src="img/1.jpg" alt="Фото слева" loading="lazy">
+            <!-- 2. Центр верх (квадрат) -->
+            <img src="img/2.jpg" alt="Фото центр верх" loading="lazy">
+            <!-- 3. Центр низ (квадрат) -->
+            <img src="img/3.jpg" alt="Фото центр низ" loading="lazy">
+            <!-- 4. Справа (высокое) -->
+            <img src="img/4.jpg" alt="Фото справа" loading="lazy">
+        </div>
+    </section>
+
+    <!-- 5. Генерация PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // Таймер обратного отсчёта до 14 августа 2026, 19:00
+        function updateCountdown() {
+            const weddingDate = new Date('2026-08-14T19:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = String(days).padStart(2, '0');
+                document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Логика окна с информацией
+        const infoBtn = document.getElementById('openInfo');
+        const infoModal = document.getElementById('infoModal');
+        const closeInfoBtn = document.getElementById('closeInfo');
+
+        infoBtn.addEventListener('click', () => infoModal.showModal());
+        closeInfoBtn.addEventListener('click', () => infoModal.close());
+
+        // Закрытие при клике на затемнённый фон
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) infoModal.close();
+        });
+    </script>
+</body>
+</html>
