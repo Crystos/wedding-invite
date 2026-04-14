@@ -1,66 +1,66 @@
-const modal = document.getElementById('inviteModal');
-document.getElementById('openForm').onclick = () => modal.showModal();
-document.getElementById('closeModal').onclick = () => modal.close();
+import { Resend } from 'resend';
 
-// Логика чекбокса +1
-const plusOneCheckbox = document.getElementById('plusOne');
-const plusOneFields = document.getElementById('plusOneFields');
-plusOneCheckbox.addEventListener('change', () => {
-    const show = plusOneCheckbox.checked;
-    plusOneFields.classList.toggle('hidden', !show);
-    plusOneFields.querySelectorAll('input').forEach(inp => inp.required = show);
-});
+// Инициализация клиента
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Индивидуальный параллакс для каждого фото
-document.querySelectorAll('.collage-item').forEach(item => {
-    const speed = parseFloat(item.dataset.speed);
-    const img = item.querySelector('img');
-    
-    window.addEventListener('mousemove', (e) => {
-        if (window.innerWidth < 768) return;
-        const x = (window.innerWidth / 2 - e.pageX) * speed;
-        const y = (window.innerHeight / 2 - e.pageY) * speed;
-        img.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
-    });
-});
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end();
 
-// Отправка формы + генерация PDF
-const form = document.getElementById('guestForm');
-const submitBtn = document.getElementById('submitBtn');
+  const { name, phone, email, plus_name, plus_phone, plus_email, pdfAttachment } = req.body;
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+  const TG_CHAT = process.env.TELEGRAM_CHAT_ID;
 
-form.onsubmit = async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Генерация приглашения...';
+  // 1️⃣ Уведомление в Telegram (не блокирует основной ответ)
+  if (TG_TOKEN && TG_CHAT) {
+    const msg = `🖤 Новый гость\n👤 ${name}\n📞 ${phone}\n📧 ${email}\n${plus_name ? `➕ ${plus_name}` : '❌ Без +1'}`;
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT, text: msg })
+    }).catch(err => console.error('⚠️ Telegram notify failed:', err.message));
+  }
 
-    const data = Object.fromEntries(new FormData(form));
+  // 2️⃣ Шаблон письма
+  const html = `
+<div style="background:#050505;color:#e0e0e0;padding:40px 20px;font-family:'Helvetica Neue',sans-serif;max-width:600px;margin:auto;border:1px solid #222;">
+  <h1 style="text-align:center;font-weight:300;letter-spacing:4px;margin:0 0 30px;">∞</h1>
+  <p style="font-size:16px;line-height:1.6;">Уважаемый(ая) <strong style="color:#fff;">${name}</strong>,</p>
+  <p style="font-size:15px;line-height:1.6;opacity:0.9;">
+    Ждём вас <strong>14 августа 2026</strong> в <strong>19:00</strong><br>
+    📍 Место: Пермь, загородный клуб "Тёрн"<br>
+    👗 Дресс-код: <em>Total Black</em>
+  </p>
+  ${plus_name ? `<p style="font-size:15px;opacity:0.9;margin-top:10px;">✨ Гость +1: <strong>${plus_name}</strong></p>` : ''}
+  <hr style="border:0;border-top:1px solid #333;margin:25px 0;">
+  <p style="text-align:center;font-size:12px;opacity:0.5;margin-top:30px;">Игорь & Светлана • 2026</p>
+</div>`;
 
-    try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'mm', format: 'a5' });
-        
-        // Фон и текст
-        doc.setFillColor(5, 5, 5); doc.rect(0, 0, 210, 148, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(36); doc.text('∞', 105, 35, { align: 'center' });
-        doc.setFontSize(16); doc.text('Приглашение на свадьбу', 105, 55, { align: 'center' });
-        doc.setFontSize(20); doc.text(data.name, 105, 70, { align: 'center' });
-        if (data.plus_name) doc.text(`+ ${data.plus_name}`, 105, 82, { align: 'center' });
-        doc.setFontSize(12); doc.text(`14 августа 2026 • 19:00`, 105, 100, { align: 'center' });
-        doc.text(`Стиль: total black`, 105, 110, { align: 'center' });
-        doc.text(`Место: [Ваш Адрес]`, 105, 120, { align: 'center' });
+  // 3️⃣ Отправка через Resend
+  try {
+    const attachments = [];
+    if (pdfAttachment) attachments.push({ filename: 'invitation.pdf', content: Buffer.from(pdfAttachment, 'base64') });
 
-        // Конвертация в base64
-        data.pdfAttachment = doc.output('datauristring').split(',')[1];
-    } catch (err) { console.error('PDF Error:', err); }
+    const payload = {
+      from: 'Свадьба <onboarding@resend.dev>',
+      to: [email],
+      subject: `Приглашение на 14.08.2026`,
+      html,
+      attachments
+    };
 
-    submitBtn.textContent = 'Отправка...';
-    try {
-        const res = await fetch('/api/send-invite', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
-        });
-        if (res.ok) { alert('✅ Приглашение отправлено на вашу почту!'); modal.close(); form.reset(); }
-        else alert('❌ Ошибка сервера. Попробуйте позже.');
-    } catch (err) { alert('❌ Нет соединения с интернетом.'); }
-    finally { submitBtn.disabled = false; submitBtn.textContent = 'Отправить'; }
-};
+    // Добавляем копию админу ТОЛЬКО если адрес валидный
+    if (ADMIN_EMAIL && ADMIN_EMAIL.includes('@')) {
+      payload.cc = [ADMIN_EMAIL];
+    } else {
+      console.warn('⚠️ ADMIN_EMAIL не задан или некорректен в Vercel Env Vars');
+    }
+
+    await resend.emails.send(payload);
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('❌ Resend Error:', err.message);
+    // Возвращаем понятную ошибку для фронтенда
+    res.status(500).json({ error: 'Send failed', details: err.message });
+  }
+}
