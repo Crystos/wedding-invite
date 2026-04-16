@@ -1,12 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { name, phone, vk, plus_name, plus_phone, plus_vk } = req.body;
+  // 1️⃣ Привязываем полученные данные к переменной data
+  const data = req.body; 
+  
   const VK_TOKEN = process.env.VK_GROUP_TOKEN;
   const VK_GROUP_ID = process.env.VK_GROUP_ID;
   const VK_ADMIN_ID = process.env.VK_ADMIN_USER_ID;
 
-  // Текст уведомления
   // Форматирование напитков
   const drinkNames = {
     'red_wine': '🍷 Красное', 'white_wine': '🥂 Белое', 
@@ -19,21 +20,21 @@ export default async function handler(req, res) {
 
   const formatFood = (val) => val === 'yes' ? '✅ Есть' : '❌ Нет';
 
-  // Основное сообщение
-  let msg = `🖤 Новая RSVP
-  👤 ${data.name}
-  📞 ${data.phone}
-  📧 ${data.email}
-  🍷 Напитки: ${formatDrinks(data.drinks)}
-  🍽️ Ограничения: ${formatFood(data.food_restriction)}`;
+  // 2️⃣ Собираем сообщение для ВК
+  let msg = `🖤 Новый гость
+👤 ${data.name}
+📞 ${data.phone}
+📧 ${data.email}
+🍷 Напитки: ${formatDrinks(data.drinks)}
+🍽️ Ограничения: ${formatFood(data.food_restriction)}`;
 
-  // Если есть +1 — добавляем его данные
+  // Если заполнено поле +1 — добавляем его данные
   if (data.plus_name) {
     msg += `
-  ➕ Гость +1: ${data.plus_name}
-  📞 ${data.plus_phone || '—'}
-  🍷 Напитки (+1): ${formatDrinks(data.plus_drinks)}
-  🍽️ Ограничения (+1): ${formatFood(data.plus_food_restriction)}`;
+➕ Гость +1: ${data.plus_name}
+📞 ${data.plus_phone || '—'}
+🍷 Напитки (+1): ${formatDrinks(data.plus_drinks)}
+🍽️ Ограничения (+1): ${formatFood(data.plus_food_restriction)}`;
   }
 
   try {
@@ -43,22 +44,22 @@ export default async function handler(req, res) {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         access_token: VK_TOKEN,
-        v: '5.199',          // Актуальная версия API
+        v: '5.199',
         random_id: Math.floor(Math.random() * 10000000),
-        peer_id: VK_ADMIN_ID, // ID получателя (ваш личный)
+        peer_id: VK_ADMIN_ID,
         message: msg,
-        group_id: VK_GROUP_ID // ID сообщества-бота
+        group_id: VK_GROUP_ID
       })
     });
 
-    const data = await response.json();
+    const result = await response.json();
 
-    if (data.error) {
-      console.error('❌ VK Error:', data.error);
-      return res.status(500).json({ error: 'VK send failed', details: data.error.error_msg });
+    if (result.error) {
+      console.error('❌ VK Error:', result.error);
+      return res.status(500).json({ error: 'VK send failed', details: result.error.error_msg });
     }
 
-    res.status(200).json({ ok: true, message_id: data.response });
+    res.status(200).json({ ok: true, message_id: result.response });
   } catch (err) {
     console.error('❌ Network Error:', err);
     res.status(500).json({ error: 'Request failed' });
