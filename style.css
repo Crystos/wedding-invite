@@ -225,3 +225,147 @@ form input:focus { border-color: var(--accent); }
         height: 220px;
     }
 }
+
+/* Контакты организаторов */
+.organizer-list {
+  margin: 20px 0 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.organizer-list p {
+  margin: 0 0 12px !important;
+  line-height: 1.4;
+}
+
+.organizer-list p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.organizer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 400;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.organizer-link::before {
+  content: "✦";
+  font-size: 0.8em;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.organizer-link:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(3px);
+}
+
+.organizer-link:hover::before {
+  opacity: 1;
+}
+
+.organizer-link:active {
+  transform: translateX(1px);
+}
+
+.organizer-role {
+  display: block;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+/* Секции формы */
+.form-section {
+  margin: 16px 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.section-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+/* Группы чекбоксов и радио */
+.checkbox-group,
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkbox-item,
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+.checkbox-item:hover,
+.radio-item:hover {
+  opacity: 1;
+}
+
+.checkbox-item input,
+.radio-item input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  margin: 0;
+  background: #111;
+  border: 1px solid var(--border);
+}
+
+/* Адаптив: на широких экранах чекбоксы в 2 колонки */
+@media (min-width: 400px) {
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+  }
+}
+
+/* Отступ для секций внутри +1 */
+.plus-section {
+  margin: 12px 0 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid var(--border);
+  border-radius: 0 4px 4px 0;
+}
+
+.plus-section .section-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+/* Адаптив: на мобильных чекбоксы +1 в одну колонку */
+@media (max-width: 400px) {
+  .plus-section .checkbox-group {
+    grid-template-columns: 1fr !important;
+  }
+}

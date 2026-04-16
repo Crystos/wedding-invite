@@ -59,7 +59,29 @@
             <h2>Подтверждение участия</h2>
             <input type="text" name="name" placeholder="ФИО" required>
             <input type="tel" name="phone" placeholder="+7XXXXXXXXXX" pattern="^\+7\d{10}$" title="Обязательно начинается с +7 и 10 цифр" required>
+            <!-- Предпочтения по напиткам -->
+            <div class="form-section">
+                <label class="section-label">Предпочтения по напиткам:</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" name="drink" value="red_wine"> Вино красное</label>
+                    <label class="checkbox-item"><input type="checkbox" name="drink" value="white_wine"> Вино белое</label>
+                    <label class="checkbox-item"><input type="checkbox" name="drink" value="whiskey"> Виски</label>
+                    <label class="checkbox-item"><input type="checkbox" name="drink" value="vodka"> Водка</label>
+                    <label class="checkbox-item"><input type="checkbox" name="drink" value="champagne"> Шампанское</label>
+                    <label class="checkbox-item"><input type="checkbox" name="drink" value="cocktails"> Коктейли</label>
+                </div>
+            </div>
+
+            <!-- Ограничения в еде -->
+            <div class="form-section">
+                <label class="section-label">Ограничения в еде:</label>
+                <div class="radio-group">
+                    <label class="radio-item"><input type="radio" name="food_restriction" value="yes"> Есть</label>
+                    <label class="radio-item"><input type="radio" name="food_restriction" value="no" checked> Нет</label>
+                </div>
+            </div>
             <input type="vk" name="vk" placeholder="Ссылка на ваш VK" required>
+
 
             <label class="checkbox-label">
                 <input type="checkbox" id="plusOne"> +1 (если у +1 нет своего приглашения)
@@ -68,6 +90,27 @@
             <div id="plusOneFields" class="hidden">
                 <input type="text" name="plus_name" placeholder="ФИО гостя +1">
                 <input type="tel" name="plus_phone" placeholder="+7XXXXXXXXXX" pattern="^\+7\d{10}$">
+                <!-- Предпочтения по напиткам для +1 -->
+                <div class="form-section plus-section">
+                    <label class="section-label">Предпочтения по напиткам (+1):</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="plus_drink" value="red_wine"> Вино красное</label>
+                        <label class="checkbox-item"><input type="checkbox" name="plus_drink" value="white_wine"> Вино белое</label>
+                        <label class="checkbox-item"><input type="checkbox" name="plus_drink" value="whiskey"> Виски</label>
+                        <label class="checkbox-item"><input type="checkbox" name="plus_drink" value="vodka"> Водка</label>
+                        <label class="checkbox-item"><input type="checkbox" name="plus_drink" value="champagne"> Шампанское</label>
+                        <label class="checkbox-item"><input type="checkbox" name="plus_drink" value="cocktails"> Коктейли</label>
+                    </div>
+                </div>
+                
+                <!-- Ограничения в еде для +1 -->
+                <div class="form-section plus-section">
+                    <label class="section-label">Ограничения в еде (+1):</label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="plus_food_restriction" value="yes"> Есть</label>
+                        <label class="radio-item"><input type="radio" name="plus_food_restriction" value="no" checked> Нет</label>
+                    </div>
+                </div>
                 <input type="vk" name="plus_vk" placeholder="Ссылка на VK гостя +1" required>
             </div>
 
@@ -84,6 +127,21 @@
             <p>🖤 Мы организуем для вас трансфер из города до места проведения свадьбы
             <p>🖤 Дресс-код: <strong>Total Black</strong>. Примеры образов — на главной странице</p>
             <p>🖤 Ваши улыбки и смех подарят нам незабываемое счастье в это день! А пожелания в конвертах помогут осуществить мечты</p>
+            <p>🖤 Контакты организаторов:</p>
+            <div class="organizer-list">
+            <p>
+                <a href="https://t.me/lena_wedd" class="organizer-link" target="_blank" rel="noopener">
+                Лена Беляева
+                <span class="organizer-role">Организатор</span>
+                </a>
+            </p>
+            <p>
+                <a href="https://t.me/max_mikriukov" class="organizer-link" target="_blank" rel="noopener">
+                Макс Микрюков
+                <span class="organizer-role">Ведущий</span>
+                </a>
+            </p>
+            </div>
             <button id="closeInfo" class="close-btn">Понятно</button>
         </div>
     </dialog>

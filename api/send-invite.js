@@ -7,7 +7,34 @@ export default async function handler(req, res) {
   const VK_ADMIN_ID = process.env.VK_ADMIN_USER_ID;
 
   // Текст уведомления
-  const msg = `🖤 Новый гость\n👤 ${name}\n📞 ${phone}\n📧 ${vk}\n${plus_name ? `➕ ${plus_name} (${plus_phone}) (VK: ${plus_vk})` : '❌ Без +1'}`;
+  // Форматирование напитков
+  const drinkNames = {
+    'red_wine': '🍷 Красное', 'white_wine': '🥂 Белое', 
+    'whiskey': '🥃 Виски', 'vodka': '🍸 Водка',
+    'champagne': '🍾 Шампанское', 'cocktails': '🍹 Коктейли'
+  };
+
+  const formatDrinks = (drinks) => 
+    drinks?.length > 0 ? drinks.map(d => drinkNames[d] || d).join(', ') : '—';
+
+  const formatFood = (val) => val === 'yes' ? '✅ Есть' : '❌ Нет';
+
+  // Основное сообщение
+  let msg = `🖤 Новая RSVP
+  👤 ${data.name}
+  📞 ${data.phone}
+  📧 ${data.email}
+  🍷 Напитки: ${formatDrinks(data.drinks)}
+  🍽️ Ограничения: ${formatFood(data.food_restriction)}`;
+
+  // Если есть +1 — добавляем его данные
+  if (data.plus_name) {
+    msg += `
+  ➕ Гость +1: ${data.plus_name}
+  📞 ${data.plus_phone || '—'}
+  🍷 Напитки (+1): ${formatDrinks(data.plus_drinks)}
+  🍽️ Ограничения (+1): ${formatFood(data.plus_food_restriction)}`;
+  }
 
   try {
     // Отправка через VK API

@@ -28,12 +28,28 @@ document.querySelectorAll('.collage-item').forEach(item => {
 const form = document.getElementById('guestForm');
 const submitBtn = document.getElementById('submitBtn');
 
-form.onsubmit = async (e) => {
+form.onsubmit = async (e) => {    
     e.preventDefault();
     submitBtn.disabled = true;
     submitBtn.textContent = 'Генерация приглашения...';
 
-    const data = Object.fromEntries(new FormData(form));
+    // Сбор данных формы
+    const formData = new FormData(form);
+    const data = {
+    // Основной гость
+    name: formData.get('name'),
+    phone: formData.get('phone'),
+    email: formData.get('email'),
+    drinks: formData.getAll('drink'),
+    food_restriction: formData.get('food_restriction') || 'no',
+    
+    // Гость +1
+    plus_name: formData.get('plus_name'),
+    plus_phone: formData.get('plus_phone'),
+    plus_email: formData.get('plus_email'),
+    plus_drinks: formData.getAll('plus_drink'),
+    plus_food_restriction: formData.get('plus_food_restriction') || 'no'
+    };
 
     try {
         const { jsPDF } = window.jspdf;
