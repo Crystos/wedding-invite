@@ -8,7 +8,9 @@ const plusOneFields = document.getElementById('plusOneFields');
 plusOneCheckbox.addEventListener('change', () => {
     const show = plusOneCheckbox.checked;
     plusOneFields.classList.toggle('hidden', !show);
-    plusOneFields.querySelectorAll('input').forEach(inp => inp.required = show);
+    
+    // ✅ Применяем required ТОЛЬКО к текстовым полям (ФИО, телефон, VK)
+    plusOneFields.querySelectorAll('input[type="text"], input[type="tel"], input[type="vk"]').forEach(inp => inp.required = show);
 });
 
 // Индивидуальный параллакс для каждого фото
