@@ -11,8 +11,8 @@ export default async function handler(req, res) {
   // Форматирование напитков
   const drinkNames = {
     'red_wine': '🍷 Красное', 'white_wine': '🥂 Белое', 
-    'whiskey': '🥃 Виски', 'vodka': '🍸 Водка',
-    'champagne': '🍾 Шампанское', 'cocktails': '🍹 Коктейли'
+    'tincture': '🥃 Настойка', 'vodka': '🍸 Водка',
+    'light_beer': '🍺 Пиво светлое', 'dark_beer': '🍹 Пиво тёмное'
   };
 
   const formatDrinks = (drinks) => 
