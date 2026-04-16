@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   let msg = `🖤 Новый гость
 👤 ${data.name}
 📞 ${data.phone}
-📧 ${data.email}
+📧 ${data.vk}
 🍷 Напитки: ${formatDrinks(data.drinks)}
 🍽️ Ограничения: ${formatFood(data.food_restriction)}`;
 
@@ -33,6 +33,7 @@ export default async function handler(req, res) {
     msg += `
 ➕ Гость +1: ${data.plus_name}
 📞 ${data.plus_phone || '—'}
+📧 ${data.plus_vk}
 🍷 Напитки (+1): ${formatDrinks(data.plus_drinks)}
 🍽️ Ограничения (+1): ${formatFood(data.plus_food_restriction)}`;
   }
