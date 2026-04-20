@@ -53,8 +53,22 @@
         <button id="openForm" class="cta-btn">Я приеду</button>
         <button id="openInfo" class="info-btn" aria-label="Информация для гостей">?</button>
         <div class="hint-wrapper" id="hintWrapper">
-            <div class="hint-arrow">←</div>
-            <div class="hint-text">жмякай сюда</div>
+            <svg class="chalk-arrow" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="chalkBlur">
+                        <feGaussianBlur stdDeviation="1.5" />
+                    </filter>
+                </defs>
+                <!-- Изогнутая стрелка справа налево, указывающая на кнопку -->
+                <path class="arrow-path" d="M 200 30 Q 140 30 100 60 Q 70 80 55 95" stroke="#f5f5f5" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
+                <!-- Наконечник стрелки, указывающий на кнопку -->
+                <path class="arrow-head" d="M 55 95 L 62 85 M 55 95 L 48 102" stroke="#f5f5f5" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
+                <!-- Текст вдоль стрелки -->
+                <text class="hint-text-svg">
+                    <textPath href="#textPath" startOffset="50%" text-anchor="middle">жмякай сюда</textPath>
+                </text>
+                <path id="textPath" d="M 190 45 Q 140 45 100 75" stroke="none" fill="none" />
+            </svg>
         </div>
     </div>
 

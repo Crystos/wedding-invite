@@ -208,12 +208,10 @@ form input:focus { border-color: var(--accent); }
 /* 💬 Подсказка со стрелкой над кнопкой */
 .hint-wrapper {
     position: absolute;
-    top: -50px;
-    right: 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
+    top: -110px;
+    right: 20px;
+    width: 180px;
+    height: 110px;
     opacity: 1;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -223,43 +221,48 @@ form input:focus { border-color: var(--accent); }
     opacity: 0.3;
 }
 
-.hint-arrow {
-    font-size: 2.5rem;
-    color: #f5f5f5;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    text-shadow: 
-        0 0 4px rgba(255, 255, 255, 0.9),
-        0 0 10px rgba(255, 255, 255, 0.6),
-        0 0 15px rgba(255, 255, 255, 0.4),
-        2px 2px 4px rgba(255, 255, 255, 0.7);
-    animation: bounce 1.5s infinite;
-    filter: blur(0.5px) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
-    letter-spacing: -2px;
+.chalk-arrow {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
-.hint-text {
-    font-size: 0.95rem;
-    color: #f5f5f5;
+.arrow-path, .arrow-head {
+    stroke: #f5f5f5;
+    stroke-width: 6;
+    fill: none;
+    stroke-linecap: round;
+    filter: url(#chalkBlur) drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
+    animation: chalkDraw 2s infinite ease-in-out;
+}
+
+.arrow-path {
+    stroke-dasharray: 250;
+    stroke-dashoffset: 0;
+}
+
+@keyframes chalkDraw {
+    0%, 100% { 
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    50% { 
+        stroke-dashoffset: 6;
+        opacity: 0.9;
+    }
+}
+
+.hint-text-svg {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    font-weight: bold;
+    fill: #f5f5f5;
     text-transform: lowercase;
-    letter-spacing: 1.5px;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
+    letter-spacing: 1px;
+    filter: url(#chalkBlur) drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
     text-shadow: 
-        0 0 4px rgba(255, 255, 255, 0.9),
-        0 0 10px rgba(255, 255, 255, 0.6),
-        0 0 15px rgba(255, 255, 255, 0.4),
-        2px 2px 4px rgba(255, 255, 255, 0.7);
-    filter: blur(0.5px) drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
-    white-space: nowrap;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-    padding: 2px 6px;
-    border-radius: 3px;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-5px); }
+        0 0 4px rgba(255, 255, 255, 0.8),
+        0 0 8px rgba(255, 255, 255, 0.5);
 }
 
 .btn-container {
