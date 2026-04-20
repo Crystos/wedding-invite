@@ -253,13 +253,12 @@
       wrapper.innerHTML = `
         <svg class="chalk-arrow-svg" width="200" height="160" viewBox="0 0 200 160">
           <g class="chalk-hint-group chalk-effect">
-            <!-- Изогнутая стрелка с наконечником-сердечком -->
-            <!-- Стрела начинается справа сверху, изгибается влево и вниз -->
-            <path class="chalk-arrow-path" d="M 175 20 C 140 10, 100 15, 65 45 C 50 58, 40 73, 32 90 L 20 85" />
+            <!-- Изогнутая стрелка, огибающая кнопку сверху -->
+            <!-- Стрелка начинается справа, идёт вверх, затем влево и вниз к левому краю кнопки -->
+            <path class="chalk-arrow-path" d="M 180 140 C 170 120, 150 100, 120 90 C 90 80, 60 85, 40 100 C 25 112, 15 130, 10 150 L 5 155" />
             
-            <!-- Наконечник в форме сердечка-стрелы -->
-            <!-- Рисуем сердечко с остриём внизу, указывающим на цель -->
-            <path class="chalk-arrow-path" d="M 20 85 C 15 75, 5 70, 0 75 C -5 80, 0 90, 10 95 C 15 98, 20 95, 25 90 C 30 85, 25 80, 20 85 Z" 
+            <!-- Наконечник в форме сердечка-стрелы на конце линии -->
+            <path class="chalk-arrow-path" d="M 5 155 C 0 145, -10 140, -15 145 C -20 150, -15 160, -5 165 C 0 168, 5 165, 10 160 C 15 155, 10 150, 5 155 Z" 
                   fill="#f0f0f0" stroke="none" filter="url(#chalk-filter)" />
             
             <!-- Текст вдоль стрелки -->
@@ -278,16 +277,17 @@
         // Цель: правый верхний угол кнопки
         const targetX = rect.right + window.scrollX;
         const targetY = rect.top + window.scrollY;
+        const btnWidth = rect.width;
+        const btnHeight = rect.height;
 
-        // В SVG острие сердечка находится примерно в координатах (20, 85) из 200x160
-        // Мы хотим, чтобы острие указывало на правый верхний угол кнопки
-        // Небольшой отступ, чтобы острие было рядом с кнопкой, но не перекрывало её
-        const offsetX = 20; // координата острия по X в SVG
-        const offsetY = 85; // координата острия по Y в SVG
+        // Позиционируем wrapper так, чтобы стрелка огибала кнопку сверху
+        // SVG имеет viewBox 0 0 200 160, стрелка начинается справа и обводит кнопку слева
+        const offsetX = 10; // небольшой отступ от правого края кнопки
+        const offsetY = 20; // отступ сверху
         
-        // Позиционируем wrapper так, чтобы острие стрелки было чуть выше и правее кнопки
-        const wrapperLeft = targetX - 10 - offsetX;
-        const wrapperTop = targetY - 15 - offsetY;
+        // Wrapper позиционируется так, чтобы правая часть SVG была у правого края кнопки
+        const wrapperLeft = targetX - btnWidth - 80 - offsetX;
+        const wrapperTop = targetY - btnHeight - offsetY;
 
         wrapper.style.left = `${wrapperLeft}px`;
         wrapper.style.top = `${wrapperTop}px`;
