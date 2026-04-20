@@ -205,6 +205,50 @@ form input:focus { border-color: var(--accent); }
     transform: scale(1.05);
 }
 
+/* 💬 Подсказка со стрелкой над кнопкой */
+.hint-wrapper {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.hint-wrapper.faded {
+    opacity: 0.3;
+}
+
+.hint-arrow {
+    font-size: 1.8rem;
+    color: var(--accent);
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+    animation: bounce 1.5s infinite;
+}
+
+.hint-text {
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.btn-container {
+    position: relative;
+}
+
 /* Оформление контента внутри окна */
 #infoModal .info-content { padding: 10px 0; text-align: left; }
 #infoModal .info-title { font-size: 1.3rem; font-weight: 400; margin-bottom: 20px; color: var(--accent); letter-spacing: 0.5px; }
