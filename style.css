@@ -171,7 +171,6 @@ form input:focus { border-color: var(--accent); }
     }
 }
 
-/* 📦 Контейнер для выравнивания обеих кнопок */
 .btn-container {
     display: flex;
     justify-content: center;
@@ -179,6 +178,7 @@ form input:focus { border-color: var(--accent); }
     gap: 16px;
     margin: 0 auto 60px;
     width: fit-content;
+    position: relative;
 }
 
 /* ❓ Кнопка со знаком вопроса */
@@ -203,68 +203,6 @@ form input:focus { border-color: var(--accent); }
     background: var(--accent);
     color: var(--bg);
     transform: scale(1.05);
-}
-
-/* 💬 Подсказка со стрелкой над кнопкой */
-.hint-wrapper {
-    position: absolute;
-    top: -270px;
-    right: -210px;
-    width: 580px;
-    height: 290px;
-    opacity: 1;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-}
-
-.hint-wrapper.faded {
-    opacity: 0.3;
-}
-
-.chalk-arrow {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-}
-
-.arrow-path, .arrow-head {
-    stroke: #e8e8e8;
-    stroke-width: 12;
-    fill: none;
-    stroke-linecap: round;
-    filter: url(#chalkBlur);
-    animation: chalkDraw 2s infinite ease-in-out;
-}
-
-.arrow-path {
-    stroke-dasharray: 550;
-    stroke-dashoffset: 0;
-}
-
-@keyframes chalkDraw {
-    0%, 100% { 
-        stroke-dashoffset: 0;
-        opacity: 1;
-    }
-    50% { 
-        stroke-dashoffset: 16;
-        opacity: 0.9;
-    }
-}
-
-.hint-text-svg {
-    font-family: 'Courier New', monospace;
-    font-size: 42px;
-    font-weight: bold;
-    fill: #e8e8e8;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    filter: url(#chalkBlur);
-    text-shadow: none;
-}
-
-.btn-container {
-    position: relative;
 }
 
 /* Оформление контента внутри окна */

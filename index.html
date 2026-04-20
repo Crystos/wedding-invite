@@ -6,6 +6,8 @@
     <title>Свадьба 14.08.2026 | ∞</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>∞</text></svg>">
     <link rel="stylesheet" href="style.css">
+    <!-- Подключение рукописного шрифта для эффекта мела -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
     <!-- 4. Яндекс.Метрика -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -52,25 +54,17 @@
     <div class="btn-container">
         <button id="openForm" class="cta-btn">Я приеду</button>
         <button id="openInfo" class="info-btn" aria-label="Информация для гостей">?</button>
-        <div class="hint-wrapper" id="hintWrapper">
-            <svg class="chalk-arrow" viewBox="0 0 580 290" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <filter id="chalkBlur">
-                        <feGaussianBlur stdDeviation="1.5" />
-                    </filter>
-                </defs>
-                <!-- Изогнутая стрелка справа налево (зеркально по вертикали - изгиб вверх), указывающая на кнопку -->
-                <path class="arrow-path" d="M 540 240 Q 380 240 290 160 Q 210 90 175 65" stroke="#e8e8e8" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
-                <!-- Наконечник стрелки, указывающий на правый верхний угол кнопки - более выраженный -->
-                <path class="arrow-head" d="M 175 65 L 155 75 M 175 65 L 158 52" stroke="#e8e8e8" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
-                <!-- Текст вдоль стрелки (сверху, перевёрнутый для чтения) -->
-                <text class="hint-text-svg" transform="rotate(180 290 145)">
-                    <textPath href="#textPath" startOffset="50%" text-anchor="middle">жмякай сюда</textPath>
-                </text>
-                <path id="textPath" d="M 525 215 Q 380 215 290 140 Q 220 80 180 60" stroke="none" fill="none" />
-            </svg>
-        </div>
     </div>
+
+    <!-- SVG фильтр для имитации неровной линии мела (добавляется один раз в body) -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+      <defs>
+        <filter id="chalk-filter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
 
     <dialog id="inviteModal">
         <form id="guestForm">
@@ -181,6 +175,144 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 
+    <!-- Подсказка со стрелкой в стиле мела -->
+    <style>
+      /* Контейнер-обертка для позиционирования (не влияет на поток документа) */
+      .chalk-hint-wrapper {
+        position: absolute;
+        pointer-events: none; /* Чтобы клики проходили сквозь подсказку, кроме кнопки */
+        z-index: 9999;
+        /* Позиция будет задана через JS относительно кнопки */
+      }
+
+      /* Эффект мела для текста и стрелки */
+      .chalk-effect {
+        font-family: 'Caveat', cursive;
+        color: #f0f0f0; /* Матовый белый */
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4)) 
+                drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+        opacity: 0.95;
+      }
+
+      /* Стиль для стрелки (SVG) */
+      .chalk-arrow-svg {
+        overflow: visible;
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3)) 
+                blur(0.8px); /* Размытие имитирует растекание мела */
+      }
+
+      .chalk-arrow-path {
+        fill: none;
+        stroke: #f0f0f0;
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        /* Фильтр для неровности линии */
+        filter: url(#chalk-filter); 
+      }
+
+      /* Стиль для текста */
+      .chalk-text {
+        font-size: 28px;
+        font-weight: 700;
+        white-space: nowrap;
+        transform-origin: center;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        filter: blur(0.5px); /* Дополнительное размытие для мягкости */
+      }
+
+      /* Анимация покачивания */
+      @keyframes chalk-bounce {
+        0%, 100% { transform: rotate(0deg) translate(0, 0); }
+        50% { transform: rotate(-2deg) translate(-2px, 2px); }
+      }
+
+      .chalk-hint-group {
+        animation: chalk-bounce 2s infinite ease-in-out;
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      /* Состояние после нажатия */
+      .chalk-hint-wrapper.faded {
+        transition: opacity 0.8s ease;
+        opacity: 0.2; /* Полупрозрачность */
+        pointer-events: none;
+      }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const targetBtn = document.getElementById('openInfo');
+      
+      if (!targetBtn) return; // Если кнопки нет, ничего не делаем
+
+      // Создаем элементы подсказки
+      const wrapper = document.createElement('div');
+      wrapper.className = 'chalk-hint-wrapper';
+      wrapper.innerHTML = `
+        <svg class="chalk-arrow-svg" width="200" height="120" viewBox="0 0 200 120">
+          <g class="chalk-hint-group chalk-effect">
+            <!-- Изогнутая стрелка: старт справа сверху, изгиб вниз, конец слева снизу (указывает на кнопку) -->
+            <!-- Путь перерисован: начало справа, изгиб вверх-влево, острие вниз-влево к кнопке -->
+            <path class="chalk-arrow-path" d="M 180 20 C 140 10, 100 10, 60 40 C 45 52, 35 65, 25 80 L 15 75 M 25 80 L 35 90" />
+            
+            <!-- Текст вдоль стрелки -->
+            <!-- Трансформация: поворот и позиционирование над линией изгиба -->
+            <text x="110" y="35" class="chalk-text" transform="rotate(-15 110 35)">Жмякай сюда</text>
+          </g>
+        </svg>
+      `;
+
+      // Добавляем подсказку в DOM (в body или в родительский контейнер кнопки)
+      // Лучше добавить в body и позиционировать абсолютно, чтобы не ломать верстку внутри контейнера
+      document.body.appendChild(wrapper);
+
+      // Функция позиционирования
+      function positionHint() {
+        const rect = targetBtn.getBoundingClientRect();
+        
+        // Мы хотим, чтобы острие стрелки (левый нижний угол SVG) указывало на правый верхний угол кнопки
+        // Координаты правого верхнего угла кнопки:
+        const targetX = rect.right;
+        const targetY = rect.top;
+
+        // Смещение, чтобы острие стрелки совпало с целью
+        // В SVG острие примерно в координатах (15, 90) из 200x120
+        // Нам нужно сдвинуть SVG так, чтобы эта точка попала на targetX, targetY
+        // Но стрелка смотрит влево-вниз, значит нам нужно разместить SVG справа-сверху от кнопки
+        
+        // Расчет позиции левого верхнего угла wrapper'а
+        // Острие стрелки (примерно): X=25, Y=80 (внутри SVG 200x120)
+        // Мы хотим, чтобы это острие было чуть выше и правее центра кнопки, или точно на её край.
+        // По ТЗ: "острым концом она смотрела на круглую кнопку... на правый верхний угол"
+        
+        const offsetX = 25; // координата острия по X в SVG
+        const offsetY = 80; // координата острия по Y в SVG
+        
+        // Позиционируем wrapper так, чтобы его точка (offsetX, offsetY) совпала с (rect.right + 5, rect.top - 5)
+        // Добавляем небольшие отступы, чтобы не перекрывать саму кнопку полностью
+        const wrapperLeft = targetX + 5 - offsetX;
+        const wrapperTop = targetY - 5 - offsetY;
+
+        wrapper.style.left = `${wrapperLeft}px`;
+        wrapper.style.top = `${wrapperTop}px`;
+      }
+
+      // Первоначальное позиционирование
+      positionHint();
+
+      // Пересчет при изменении размера окна или скролле (если кнопка не fixed)
+      window.addEventListener('resize', positionHint);
+      window.addEventListener('scroll', positionHint, true);
+
+      // Обработка клика
+      targetBtn.addEventListener('click', function() {
+        wrapper.classList.add('faded');
+      });
+    });
+    </script>
+
     <script>
         // Таймер обратного отсчёта до 14 августа 2026, 19:00
         function updateCountdown() {
@@ -213,14 +345,9 @@
         const infoBtn = document.getElementById('openInfo');
         const infoModal = document.getElementById('infoModal');
         const closeInfoBtn = document.getElementById('closeInfo');
-        const hintWrapper = document.getElementById('hintWrapper');
 
         infoBtn.addEventListener('click', () => {
             infoModal.showModal();
-            // Делаем подсказку полупрозрачной после нажатия
-            if (hintWrapper) {
-                hintWrapper.classList.add('faded');
-            }
         });
         closeInfoBtn.addEventListener('click', () => infoModal.close());
 
