@@ -251,49 +251,38 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'chalk-hint-wrapper';
       wrapper.innerHTML = `
-        <svg class="chalk-arrow-svg" width="200" height="120" viewBox="0 0 200 120">
+        <svg class="chalk-arrow-svg" width="180" height="140" viewBox="0 0 180 140">
           <g class="chalk-hint-group chalk-effect">
-            <!-- Изогнутая стрелка: старт справа сверху, изгиб вниз, конец слева снизу (указывает на кнопку) -->
-            <!-- Путь перерисован: начало справа, изгиб вверх-влево, острие вниз-влево к кнопке -->
-            <path class="chalk-arrow-path" d="M 180 20 C 140 10, 100 10, 60 40 C 45 52, 35 65, 25 80 L 15 75 M 25 80 L 35 90" />
+            <!-- Изогнутая стрелка с четким остриём -->
+            <!-- Старт справа сверху, изгиб влево и вниз, острие указывает точно на цель -->
+            <path class="chalk-arrow-path" d="M 165 25 C 130 15, 90 20, 55 50 C 40 63, 30 78, 22 95 L 10 90 M 22 95 L 28 105" />
             
             <!-- Текст вдоль стрелки -->
-            <!-- Трансформация: поворот и позиционирование над линией изгиба -->
-            <text x="110" y="35" class="chalk-text" transform="rotate(-15 110 35)">Жмякай сюда</text>
+            <text x="95" y="40" class="chalk-text" transform="rotate(-12 95 40)">Жмякай сюда</text>
           </g>
         </svg>
       `;
 
-      // Добавляем подсказку в DOM (в body или в родительский контейнер кнопки)
-      // Лучше добавить в body и позиционировать абсолютно, чтобы не ломать верстку внутри контейнера
+      // Добавляем подсказку в DOM
       document.body.appendChild(wrapper);
 
       // Функция позиционирования
       function positionHint() {
         const rect = targetBtn.getBoundingClientRect();
         
-        // Мы хотим, чтобы острие стрелки (левый нижний угол SVG) указывало на правый верхний угол кнопки
-        // Координаты правого верхнего угла кнопки:
-        const targetX = rect.right;
-        const targetY = rect.top;
+        // Цель: правый верхний угол кнопки
+        const targetX = rect.right + window.scrollX;
+        const targetY = rect.top + window.scrollY;
 
-        // Смещение, чтобы острие стрелки совпало с целью
-        // В SVG острие примерно в координатах (15, 90) из 200x120
-        // Нам нужно сдвинуть SVG так, чтобы эта точка попала на targetX, targetY
-        // Но стрелка смотрит влево-вниз, значит нам нужно разместить SVG справа-сверху от кнопки
+        // В SVG острие стрелки находится примерно в координатах (22, 95) из 180x140
+        // Мы хотим, чтобы острие указывало на правый верхний угол кнопки
+        // Небольшой отступ, чтобы острие было рядом с кнопкой, но не перекрывало её
+        const offsetX = 22; // координата острия по X в SVG
+        const offsetY = 95; // координата острия по Y в SVG
         
-        // Расчет позиции левого верхнего угла wrapper'а
-        // Острие стрелки (примерно): X=25, Y=80 (внутри SVG 200x120)
-        // Мы хотим, чтобы это острие было чуть выше и правее центра кнопки, или точно на её край.
-        // По ТЗ: "острым концом она смотрела на круглую кнопку... на правый верхний угол"
-        
-        const offsetX = 25; // координата острия по X в SVG
-        const offsetY = 80; // координата острия по Y в SVG
-        
-        // Позиционируем wrapper так, чтобы его точка (offsetX, offsetY) совпала с (rect.right + 5, rect.top - 5)
-        // Добавляем небольшие отступы, чтобы не перекрывать саму кнопку полностью
-        const wrapperLeft = targetX + 5 - offsetX;
-        const wrapperTop = targetY - 5 - offsetY;
+        // Позиционируем wrapper так, чтобы острие стрелки было чуть выше и правее кнопки
+        const wrapperLeft = targetX - 10 - offsetX;
+        const wrapperTop = targetY - 15 - offsetY;
 
         wrapper.style.left = `${wrapperLeft}px`;
         wrapper.style.top = `${wrapperTop}px`;
@@ -302,7 +291,7 @@
       // Первоначальное позиционирование
       positionHint();
 
-      // Пересчет при изменении размера окна или скролле (если кнопка не fixed)
+      // Пересчет при изменении размера окна или скролле
       window.addEventListener('resize', positionHint);
       window.addEventListener('scroll', positionHint, true);
 
