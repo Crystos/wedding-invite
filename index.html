@@ -53,21 +53,21 @@
         <button id="openForm" class="cta-btn">Я приеду</button>
         <button id="openInfo" class="info-btn" aria-label="Информация для гостей">?</button>
         <div class="hint-wrapper" id="hintWrapper">
-            <svg class="chalk-arrow" viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg">
+            <svg class="chalk-arrow" viewBox="0 0 580 290" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <filter id="chalkBlur">
-                        <feGaussianBlur stdDeviation="1.2" />
+                        <feGaussianBlur stdDeviation="1.5" />
                     </filter>
                 </defs>
-                <!-- Изогнутая стрелка справа налево, указывающая на кнопку -->
-                <path class="arrow-path" d="M 470 45 Q 320 45 240 115 Q 170 180 135 215" stroke="#e8e8e8" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
-                <!-- Наконечник стрелки, указывающий на правый верхний угол кнопки -->
-                <path class="arrow-head" d="M 135 215 L 147 198 M 135 215 L 122 228" stroke="#e8e8e8" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
-                <!-- Текст вдоль стрелки -->
-                <text class="hint-text-svg">
+                <!-- Изогнутая стрелка справа налево (зеркально по вертикали - изгиб вверх), указывающая на кнопку -->
+                <path class="arrow-path" d="M 540 240 Q 380 240 290 160 Q 210 90 175 65" stroke="#e8e8e8" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
+                <!-- Наконечник стрелки, указывающий на правый верхний угол кнопки - более выраженный -->
+                <path class="arrow-head" d="M 175 65 L 155 75 M 175 65 L 158 52" stroke="#e8e8e8" stroke-width="12" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
+                <!-- Текст вдоль стрелки (сверху, перевёрнутый для чтения) -->
+                <text class="hint-text-svg" transform="rotate(180 290 145)">
                     <textPath href="#textPath" startOffset="50%" text-anchor="middle">жмякай сюда</textPath>
                 </text>
-                <path id="textPath" d="M 455 70 Q 320 70 240 135 Q 180 195 145 225" stroke="none" fill="none" />
+                <path id="textPath" d="M 525 215 Q 380 215 290 140 Q 220 80 180 60" stroke="none" fill="none" />
             </svg>
         </div>
     </div>
