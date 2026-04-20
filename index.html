@@ -53,21 +53,21 @@
         <button id="openForm" class="cta-btn">Я приеду</button>
         <button id="openInfo" class="info-btn" aria-label="Информация для гостей">?</button>
         <div class="hint-wrapper" id="hintWrapper">
-            <svg class="chalk-arrow" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
+            <svg class="chalk-arrow" viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <filter id="chalkBlur">
-                        <feGaussianBlur stdDeviation="1.5" />
+                        <feGaussianBlur stdDeviation="1.2" />
                     </filter>
                 </defs>
                 <!-- Изогнутая стрелка справа налево, указывающая на кнопку -->
-                <path class="arrow-path" d="M 200 30 Q 140 30 100 60 Q 70 80 55 95" stroke="#f5f5f5" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
-                <!-- Наконечник стрелки, указывающий на кнопку -->
-                <path class="arrow-head" d="M 55 95 L 62 85 M 55 95 L 48 102" stroke="#f5f5f5" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
+                <path class="arrow-path" d="M 470 45 Q 320 45 240 115 Q 170 180 135 215" stroke="#e8e8e8" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
+                <!-- Наконечник стрелки, указывающий на правый верхний угол кнопки -->
+                <path class="arrow-head" d="M 135 215 L 147 198 M 135 215 L 122 228" stroke="#e8e8e8" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#chalkBlur)" />
                 <!-- Текст вдоль стрелки -->
                 <text class="hint-text-svg">
                     <textPath href="#textPath" startOffset="50%" text-anchor="middle">жмякай сюда</textPath>
                 </text>
-                <path id="textPath" d="M 190 45 Q 140 45 100 75" stroke="none" fill="none" />
+                <path id="textPath" d="M 455 70 Q 320 70 240 135 Q 180 195 145 225" stroke="none" fill="none" />
             </svg>
         </div>
     </div>

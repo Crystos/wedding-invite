@@ -208,10 +208,10 @@ form input:focus { border-color: var(--accent); }
 /* 💬 Подсказка со стрелкой над кнопкой */
 .hint-wrapper {
     position: absolute;
-    top: -110px;
-    right: 20px;
-    width: 180px;
-    height: 110px;
+    top: -240px;
+    right: -150px;
+    width: 540px;
+    height: 260px;
     opacity: 1;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -228,16 +228,16 @@ form input:focus { border-color: var(--accent); }
 }
 
 .arrow-path, .arrow-head {
-    stroke: #f5f5f5;
-    stroke-width: 6;
+    stroke: #e8e8e8;
+    stroke-width: 10;
     fill: none;
     stroke-linecap: round;
-    filter: url(#chalkBlur) drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
+    filter: url(#chalkBlur);
     animation: chalkDraw 2s infinite ease-in-out;
 }
 
 .arrow-path {
-    stroke-dasharray: 250;
+    stroke-dasharray: 550;
     stroke-dashoffset: 0;
 }
 
@@ -247,22 +247,20 @@ form input:focus { border-color: var(--accent); }
         opacity: 1;
     }
     50% { 
-        stroke-dashoffset: 6;
+        stroke-dashoffset: 16;
         opacity: 0.9;
     }
 }
 
 .hint-text-svg {
     font-family: 'Courier New', monospace;
-    font-size: 20px;
+    font-size: 38px;
     font-weight: bold;
-    fill: #f5f5f5;
+    fill: #e8e8e8;
     text-transform: lowercase;
     letter-spacing: 1px;
-    filter: url(#chalkBlur) drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
-    text-shadow: 
-        0 0 4px rgba(255, 255, 255, 0.8),
-        0 0 8px rgba(255, 255, 255, 0.5);
+    filter: url(#chalkBlur);
+    text-shadow: none;
 }
 
 .btn-container {
