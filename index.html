@@ -184,10 +184,20 @@
         z-index: 9999;
         top: 0;
         left: 0;
+        width: 0;
+        height: 0;
+      }
+
+      /* Группа элементов для анимации */
+      .chalk-hint-group {
+        position: absolute;
+        animation: chalk-bounce 2s infinite ease-in-out;
+        transform-box: fill-box;
+        transform-origin: center;
         will-change: transform;
       }
 
-      /* Эффект мела для текста и стрелки */
+      /* Эффект мела */
       .chalk-effect {
         font-family: 'Caveat', cursive;
         color: #f5f5f5; /* Матовый белый мел */
@@ -219,28 +229,10 @@
         filter: url(#chalk-filter);
       }
 
-      /* Стиль для текста */
-      .chalk-text {
-        font-size: 48px;
-        font-weight: 700;
-        white-space: nowrap;
-        transform-origin: center;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-        filter: blur(0.6px);
-        dominant-baseline: middle;
-        text-anchor: middle;
-      }
-
       /* Анимация покачивания */
       @keyframes chalk-bounce {
         0%, 100% { transform: rotate(0deg) translate(0, 0); }
         50% { transform: rotate(-3deg) translate(-3px, 3px); }
-      }
-
-      .chalk-hint-group {
-        animation: chalk-bounce 2s infinite ease-in-out;
-        transform-box: fill-box;
-        transform-origin: center;
       }
 
       /* Состояние после нажатия */
@@ -270,20 +262,19 @@
       
       // SVG структура:
       // viewBox 260x140
-      // Линия идет справа сверху (220, 30) изгибается влево-вниз и заканчивается в точке (40, 90)
-      // Остриё (треугольник) рисуется в точке (40, 90) и направлено вершиной к кнопке (влево-вниз)
-      // Текст расположен правее, над линией изгиба
+      // Линия идет справа сверху (230, 20) изгибается влево-вниз и заканчивается в точке (30, 100)
+      // Остриё (треугольник) рисуется ОТДЕЛЬНО в точке окончания линии
       wrapper.innerHTML = `
-        <svg class="chalk-arrow-svg" width="260" height="140" viewBox="0 0 260 140">
-          <g class="chalk-hint-group chalk-effect">
+        <div class="chalk-hint-group chalk-effect">
+          <svg class="chalk-arrow-svg" width="260" height="140" viewBox="0 0 260 140">
             <!-- Основная линия: старт справа сверху, изгиб влево-вниз -->
-            <path class="chalk-arrow-path" d="M 220 30 C 180 20, 120 25, 80 50 C 60 62, 50 75, 40 90" />
+            <path class="chalk-arrow-path" d="M 230 20 C 190 10, 130 15, 90 40 C 70 52, 50 70, 30 100" />
             
-            <!-- Остриё стрелы: треугольник, вершина направлена к кнопке -->
-            <!-- Рисуем треугольник с центром в (40, 90), вершина смотрит влево-вниз -->
-            <polygon class="chalk-arrow-head" points="40,90 28,82 32,96" />
-          </g>
-        </svg>
+            <!-- Остриё стрелы: отдельный треугольник, направленный к кнопке (влево-вниз) -->
+            <!-- Вершина в (30, 100), основание смещено вправо-вверх -->
+            <polygon class="chalk-arrow-head" points="30,100 15,92 22,108" />
+          </svg>
+        </div>
       `;
 
       document.body.appendChild(wrapper);
@@ -296,16 +287,17 @@
         const targetX = rect.right;
         const targetY = rect.top;
 
-        // В нашей SVG координаты острия (вершины треугольника) находятся в точке (40, 90) внутри viewBox 260x140
-        const arrowTipX = 40; 
-        const arrowTipY = 90;
+        // Координаты острия внутри SVG (вершина треугольника)
+        const arrowTipX = 30; 
+        const arrowTipY = 100;
 
-        // Мы хотим, чтобы (arrowTipX, arrowTipY) совпало с (targetX + небольшой отступ, targetY - небольшой отступ)
-        // Отступы нужны, чтобы острие не перекрывало саму кнопку, а указывало на неё
+        // Позиционируем wrapper так, чтобы острие указывало на кнопку
+        // wrapper имеет width:0, height:0, поэтому left/top задают точку привязки
         const wrapperLeft = targetX + 5 - arrowTipX;
         const wrapperTop = targetY - 5 - arrowTipY;
 
-        wrapper.style.transform = `translate(${wrapperLeft}px, ${wrapperTop}px)`;
+        wrapper.style.left = `${wrapperLeft}px`;
+        wrapper.style.top = `${wrapperTop}px`;
       }
 
       // Первоначальное позиционирование
