@@ -372,5 +372,161 @@
             if (e.target === infoModal) infoModal.close();
         });
     </script>
+<!-- Подключение рукописного шрифта для эффекта мела -->
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+
+<style>
+  /* Контейнер-обертка для позиционирования */
+  .chalk-hint-wrapper {
+    position: fixed; /* Fixed вместо absolute, чтобы не съезжало при скролле */
+    pointer-events: none;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Группа элементов внутри SVG */
+  .chalk-hint-group {
+    animation: chalk-bounce 2s infinite ease-in-out;
+    transform-box: fill-box;
+    transform-origin: 150px 60px; /* Центр вращения для анимации */
+  }
+
+  /* Эффект мела для текста */
+  .chalk-text {
+    font-family: 'Caveat', cursive;
+    font-size: 48px; /* Увеличенный размер */
+    font-weight: 700;
+    fill: #f0f0f0;
+    paint-order: stroke;
+    stroke: #f0f0f0;
+    stroke-width: 1px;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6)) 
+            drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+    text-shadow: none; /* Убрали стандартную тень, используем SVG фильтры */
+  }
+
+  /* Стиль для основной линии стрелки (с эффектом мела) */
+  .chalk-arrow-path {
+    fill: none;
+    stroke: #f0f0f0;
+    stroke-width: 12; /* Широкий штрих */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: url(#chalk-filter); /* Фильтр только для линии */
+  }
+
+  /* Стиль для наконечника (без искажений, чтобы был четким) */
+  .chalk-arrow-head {
+    fill: #f0f0f0;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6)) 
+            drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+  }
+
+  /* Анимация покачивания */
+  @keyframes chalk-bounce {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-3deg); }
+  }
+
+  /* Состояние после нажатия */
+  .chalk-hint-wrapper.faded {
+    transition: opacity 1s ease;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+</style>
+
+<!-- SVG фильтр для имитации неровной линии мела -->
+<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+  <defs>
+    <filter id="chalk-filter">
+      <!-- Шум для текстуры -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise" />
+      <!-- Искажение только по вертикали для эффекта дрожащей руки/мела -->
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G" />
+      <!-- Легкое размытие -->
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const targetBtn = document.getElementById('openInfo');
+  
+  if (!targetBtn) return;
+
+  // Создаем элементы подсказки
+  const wrapper = document.createElement('div');
+  wrapper.className = 'chalk-hint-wrapper';
+  
+  // SVG структура:
+  // ViewBox подобран так, чтобы удобно рисовать кривую.
+  // Стрелка начинается справа (180, 30), идет влево и вниз, заканчивается острием около (40, 90).
+  // Координаты острия в SVG: X=40, Y=90.
+  wrapper.innerHTML = `
+    <svg class="chalk-hint-svg" viewBox="0 0 220 140" style="width: 100%; height: 100%; position: absolute; overflow: visible;">
+      <g class="chalk-hint-group">
+        <!-- Основная изогнутая линия (тело стрелки) -->
+        <!-- Рисуем путь от хвоста до точки перед острием -->
+        <path class="chalk-arrow-path" d="M 190 30 C 150 20, 100 25, 60 50 C 50 58, 45 70, 42 85" />
+        
+        <!-- Четкий наконечник (треугольник), направленный на кнопку -->
+        <!-- Рисуется отдельно без фильтра искажения, чтобы сохранить форму угла -->
+        <!-- Треугольник направлен вниз-влево (к кнопке) -->
+        <polygon class="chalk-arrow-head" points="42,85 30,75 35,92" />
+        
+        <!-- Текст вдоль стрелки -->
+        <text x="130" y="45" class="chalk-text" transform="rotate(-12 130 45)">Жмякай сюда</text>
+      </g>
+    </svg>
+  `;
+
+  document.body.appendChild(wrapper);
+
+  // Функция позиционирования
+  function positionHint() {
+    const rect = targetBtn.getBoundingClientRect();
+    
+    // Цель: правый верхний угол кнопки
+    const targetX = rect.right;
+    const targetY = rect.top;
+
+    // В нашей SVG координате острие находится в точке (42, 85) внутри viewBox 220x140
+    // Мы хотим, чтобы эта точка (42, 85) совпала с (targetX + отступ, targetY - отступ)
+    // Отступы нужны, чтобы стрелка не перекрывала саму кнопку вплотную
+    
+    const offsetX = 42; 
+    const offsetY = 85;
+    
+    // Небольшой зазор (5px), чтобы острие почти касалось, но не налезало
+    const gap = 5;
+
+    // Вычисляем левый верхний угол контейнера wrapper
+    // wrapper.style.left должен быть таким, чтобы при добавлении offsetX мы попали в targetX
+    const wrapperLeft = (targetX + gap) - offsetX;
+    const wrapperTop = (targetY - gap) - offsetY;
+
+    wrapper.style.left = `${wrapperLeft}px`;
+    wrapper.style.top = `${wrapperTop}px`;
+  }
+
+  // Первоначальное позиционирование
+  positionHint();
+
+  // Пересчет при изменении размера окна или скролле
+  window.addEventListener('resize', positionHint);
+  window.addEventListener('scroll', positionHint, true);
+
+  // Обработка клика
+  targetBtn.addEventListener('click', function() {
+    wrapper.classList.add('faded');
+  });
+});
+</script>
 </body>
 </html>
