@@ -190,21 +190,21 @@
       /* Эффект мела для текста и стрелки */
       .chalk-effect {
         font-family: 'Caveat', cursive;
-        color: #f0f0f0;
-        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4)) 
-                drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+        color: #f5f5f5; /* Матовый белый мел */
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6)) 
+                drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
         opacity: 0.95;
       }
 
       /* Стиль для стрелки (SVG) */
       .chalk-arrow-svg {
         overflow: visible;
-        filter: blur(0.6px) drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+        display: block;
       }
 
       .chalk-arrow-path {
         fill: none;
-        stroke: #f0f0f0;
+        stroke: #f5f5f5;
         stroke-width: 10;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -213,20 +213,20 @@
 
       /* Стиль для острия стрелы (треугольник) */
       .chalk-arrow-head {
-        fill: #f0f0f0;
-        stroke: #f0f0f0;
+        fill: #f5f5f5;
+        stroke: #f5f5f5;
         stroke-width: 1;
         filter: url(#chalk-filter);
       }
 
       /* Стиль для текста */
       .chalk-text {
-        font-size: 42px;
+        font-size: 48px;
         font-weight: 700;
         white-space: nowrap;
         transform-origin: center;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        filter: blur(0.4px);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        filter: blur(0.6px);
         dominant-baseline: middle;
         text-anchor: middle;
       }
@@ -234,7 +234,7 @@
       /* Анимация покачивания */
       @keyframes chalk-bounce {
         0%, 100% { transform: rotate(0deg) translate(0, 0); }
-        50% { transform: rotate(-2deg) translate(-2px, 2px); }
+        50% { transform: rotate(-3deg) translate(-3px, 3px); }
       }
 
       .chalk-hint-group {
@@ -249,17 +249,11 @@
         opacity: 0.2;
         pointer-events: none;
       }
-    </style>
 
-    <!-- SVG фильтр для имитации неровной линии мела -->
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-      <defs>
-        <filter id="chalk-filter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </defs>
-    </svg>
+      .chalk-hint-wrapper.faded .chalk-hint-group {
+        animation: none;
+      }
+    </style>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -267,27 +261,30 @@
       
       if (!targetBtn) return;
 
+      // Проверяем, нет ли уже подсказки (защита от дублей)
+      if (document.querySelector('.chalk-hint-wrapper')) return;
+
       // Создаем элементы подсказки
       const wrapper = document.createElement('div');
       wrapper.className = 'chalk-hint-wrapper';
       
       // SVG структура:
-      // 1. Путь линии (заканчивается чуть раньше точки назначения)
-      // 2. Отдельный путь для острия (треугольник), наложенный на конец
-      // 3. Текст
+      // viewBox 260x140
+      // Линия идет справа сверху (220, 30) изгибается влево-вниз и заканчивается в точке (40, 90)
+      // Остриё (треугольник) рисуется в точке (40, 90) и направлено вершиной к кнопке (влево-вниз)
+      // Текст расположен правее, над линией изгиба
       wrapper.innerHTML = `
-        <svg class="chalk-arrow-svg" width="240" height="160" viewBox="0 0 240 160">
+        <svg class="chalk-arrow-svg" width="260" height="140" viewBox="0 0 260 140">
           <g class="chalk-hint-group chalk-effect">
-            <!-- Основная линия: старт справа сверху, изгиб вниз, конец слева снизу -->
-            <path class="chalk-arrow-path" d="M 200 25 C 150 15, 100 20, 60 60 C 45 75, 35 90, 28 105" />
+            <!-- Основная линия: старт справа сверху, изгиб влево-вниз -->
+            <path class="chalk-arrow-path" d="M 220 30 C 180 20, 120 25, 80 50 C 60 62, 50 75, 40 90" />
             
-            <!-- Остриё стрелы: рисуется отдельно, чтобы быть идеальной формы -->
-            <!-- Располагается в конце линии (примерно 28, 105) и смотрит влево-вниз на кнопку -->
-            <!-- Форма: маленький треугольник/ромб, вершина направлена к кнопке -->
-            <path class="chalk-arrow-head" d="M 28 105 L 12 115 L 16 105 L 12 95 Z" transform="rotate(-10 28 105)" />
+            <!-- Остриё стрелы: треугольник, вершина направлена к кнопке -->
+            <!-- Рисуем треугольник с центром в (40, 90), вершина смотрит влево-вниз -->
+            <polygon class="chalk-arrow-head" points="40,90 28,82 32,96" />
             
-            <!-- Текст вдоль стрелки -->
-            <text x="130" y="50" class="chalk-text" transform="rotate(-12 130 50)">Жмякай сюда</text>
+            <!-- Текст вдоль стрелки, сдвинут правее -->
+            <text x="150" y="45" class="chalk-text" transform="rotate(-10 150 45)">Жмякай сюда</text>
           </g>
         </svg>
       `;
@@ -302,15 +299,14 @@
         const targetX = rect.right;
         const targetY = rect.top;
 
-        // В нашей SVG координаты острия (вершины треугольника) находятся в точке (12, 115) внутри viewBox 240x160
-        // Это самый дальний угол треугольника, который должен указывать на кнопку
-        
-        const arrowTipX = 12; 
-        const arrowTipY = 115;
+        // В нашей SVG координаты острия (вершины треугольника) находятся в точке (40, 90) внутри viewBox 260x140
+        const arrowTipX = 40; 
+        const arrowTipY = 90;
 
-        // Мы хотим, чтобы (arrowTipX, arrowTipY) совпало с (targetX + отступ, targetY - отступ)
-        const wrapperLeft = targetX + 10 - arrowTipX;
-        const wrapperTop = targetY - 10 - arrowTipY;
+        // Мы хотим, чтобы (arrowTipX, arrowTipY) совпало с (targetX + небольшой отступ, targetY - небольшой отступ)
+        // Отступы нужны, чтобы острие не перекрывало саму кнопку, а указывало на неё
+        const wrapperLeft = targetX + 5 - arrowTipX;
+        const wrapperTop = targetY - 5 - arrowTipY;
 
         wrapper.style.transform = `translate(${wrapperLeft}px, ${wrapperTop}px)`;
       }
