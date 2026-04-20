@@ -251,18 +251,13 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'chalk-hint-wrapper';
       wrapper.innerHTML = `
-        <svg class="chalk-arrow-svg" width="200" height="160" viewBox="0 0 200 160">
+        <svg class="chalk-arrow-svg" width="150" height="100" viewBox="0 0 150 100">
           <g class="chalk-hint-group chalk-effect">
-            <!-- Основная стрелка, указывающая на кнопку -->
-            <path class="chalk-arrow-path" d="M 170 140 C 150 120, 120 100, 90 90 C 70 83, 50 80, 35 85" />
+            <!-- Стрелка, указывающая на кнопку -->
+            <path class="chalk-arrow-path" d="M 20 20 Q 70 20, 100 50 L 120 70 M 110 60 L 120 70 L 130 55" />
             
-            <!-- Линия-обводка вокруг кнопки (светящаяся) -->
-            <path class="chalk-arrow-path" d="M 35 85 C 25 80, 15 85, 10 95 C 5 105, 10 120, 20 130 C 30 140, 50 145, 70 140 C 90 135, 100 120, 95 105 C 90 90, 70 85, 50 88" 
-                  stroke="#f0f0f0" stroke-width="6" fill="none" 
-                  style="filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6)) url(#chalk-filter);" />
-            
-            <!-- Текст вдоль стрелки -->
-            <text x="110" y="50" class="chalk-text" transform="rotate(-15 110 50)">Жмякай сюда</text>
+            <!-- Текст над стрелкой -->
+            <text x="50" y="15" class="chalk-text">жмякай сюда</text>
           </g>
         </svg>
       `;
@@ -274,20 +269,19 @@
       function positionHint() {
         const rect = targetBtn.getBoundingClientRect();
         
-        // Цель: правый верхний угол кнопки
-        const targetX = rect.right + window.scrollX;
+        // Цель: левый верхний угол кнопки
+        const targetX = rect.left + window.scrollX;
         const targetY = rect.top + window.scrollY;
         const btnWidth = rect.width;
         const btnHeight = rect.height;
 
-        // Позиционируем wrapper так, чтобы стрелка указывала на кнопку справа
-        // SVG имеет viewBox 0 0 200 160, стрелка начинается справа и заканчивается слева у кнопки
-        const offsetX = 30; // отступ от правого края кнопки
-        const offsetY = 10; // отступ сверху
+        // Позиционируем wrapper так, чтобы стрелка указывала на кнопку сверху
+        const offsetX = 20; // отступ слева от кнопки
+        const offsetY = -80; // отступ сверху от кнопки
         
-        // Wrapper позиционируется так, чтобы левая часть SVG (где обводка) была у левого края кнопки
-        const wrapperLeft = targetX - btnWidth - 40 - offsetX;
-        const wrapperTop = targetY - btnHeight / 2 - 60 + offsetY;
+        // Wrapper позиционируется так, чтобы стрелка указывала на кнопку
+        const wrapperLeft = targetX - 30 + offsetX;
+        const wrapperTop = targetY + offsetY;
 
         wrapper.style.left = `${wrapperLeft}px`;
         wrapper.style.top = `${wrapperTop}px`;
