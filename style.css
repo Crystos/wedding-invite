@@ -338,12 +338,42 @@ form input:focus { border-color: var(--accent); }
   background: transparent;
   border: 2px solid var(--border);
   flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.checkbox-item input:checked,
+/* Чекбокс: стилизация галочки */
+.checkbox-item input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox-item input:checked::after {
+  content: '';
+  width: 5px;
+  height: 10px;
+  border: solid #0a0a0a;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+  display: block;
+}
+
+/* Радиокнопка: стилизация точки */
 .radio-item input:checked {
   background: var(--accent);
   border-color: var(--accent);
+}
+
+.radio-item input:checked::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #0a0a0a;
+  border-radius: 50%;
+  display: block;
 }
 
 /* Адаптив: на широких экранах чекбоксы в 2 колонки */
