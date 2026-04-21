@@ -343,6 +343,7 @@ form input:focus { border-color: var(--accent); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 /* Чекбокс: стилизация галочки */
@@ -351,13 +352,14 @@ form input:focus { border-color: var(--accent); }
   border-color: var(--accent);
 }
 
-.checkbox-item input:checked::after {
+.checkbox-item input:checked::before {
   content: '';
   width: 5px;
   height: 10px;
   border: solid #0a0a0a;
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg) translate(-1px, -1px);
+  transform: rotate(45deg) translate(-1px, -2px);
+  position: absolute;
   display: block;
 }
 
@@ -367,12 +369,13 @@ form input:focus { border-color: var(--accent); }
   border-color: var(--accent);
 }
 
-.radio-item input:checked::after {
+.radio-item input:checked::before {
   content: '';
   width: 8px;
   height: 8px;
   background: #0a0a0a;
   border-radius: 50%;
+  position: absolute;
   display: block;
 }
 
