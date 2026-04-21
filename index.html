@@ -253,18 +253,20 @@
       wrapper.innerHTML = `
         <svg class="chalk-arrow-svg" width="200" height="120" viewBox="0 0 200 120">
           <g class="chalk-hint-group chalk-effect">
-            <!-- Путь для стрелки и текста (определён один раз, используется дважды) -->
+            <!-- Путь для стрелки (справа налево) -->
             <defs>
               <path id="arrowCurve" d="M 175 20 C 150 20, 130 40, 110 60 C 90 80, 60 95, 35 95 L 25 95" />
+              <!-- Путь для текста (слева направо - обратное направление) -->
+              <path id="textCurve" d="M 25 95 L 35 95 C 60 95, 90 80, 110 60 C 130 40, 150 20, 175 20" />
             </defs>
             
             <!-- Стрелка: начинается справа сверху, изгибается вниз и указывает влево на кнопку -->
             <use href="#arrowCurve" class="chalk-arrow-path" />
             <path class="chalk-arrow-path" d="M 35 87 L 25 95 L 33 103" />
 
-            <!-- Текст вдоль кривой стрелки -->
+            <!-- Текст вдоль кривой стрелки (слева направо) -->
             <text class="chalk-text" style="font-size: 24px;">
-              <textPath href="#arrowCurve" startOffset="50%" text-anchor="middle" side="left">
+              <textPath href="#textCurve" startOffset="50%" text-anchor="middle" side="left">
                 жмякай сюда
               </textPath>
             </text>
