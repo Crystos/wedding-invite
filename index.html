@@ -269,17 +269,18 @@
       function positionHint() {
         const rect = targetBtn.getBoundingClientRect();
 
-        // Цель: левый верхний угол кнопки
-        const targetX = rect.left + window.scrollX;
-        const targetY = rect.top + window.scrollY;
-        const btnWidth = rect.width;
-        const btnHeight = rect.height;
+        // Цель: правый край кнопки (по вертикали - центр кнопки)
+        const targetX = rect.right + window.scrollX;
+        const targetY = rect.top + window.scrollY + (rect.height / 2);
 
-        // Позиционируем wrapper так, чтобы стрелка указывала на кнопку справа сверху
-        const offsetX = -160; // отступ справа от кнопки (под размер SVG)
-        const offsetY = -80; // отступ сверху для позиционирования стрелки
+        // Позиционируем wrapper так, чтобы остриё стрелки (точка 25, 95 в SVG) 
+        // совпадало с правым краем кнопки
+        // Стрелка заканчивается в точке X=25 внутри SVG шириной 200
+        // Значит wrapper должен быть смещён так, чтобы его точка X=25 была на targetX
+        const offsetX = -25; // смещение, чтобы точка X=25 в SVG совпала с правым краем кнопки
+        const offsetY = -95; // смещение, чтобы точка Y=95 в SVG совпала с целевой Y
 
-        // Wrapper позиционируется так, чтобы стрелка указывала на кнопку
+        // Wrapper позиционируется так, чтобы остриё стрелки указывало на правый край кнопки
         const wrapperLeft = targetX + offsetX;
         const wrapperTop = targetY + offsetY;
 
