@@ -251,13 +251,13 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'chalk-hint-wrapper';
       wrapper.innerHTML = `
-        <svg class="chalk-arrow-svg" width="150" height="100" viewBox="0 0 150 100">
+        <svg class="chalk-arrow-svg" width="200" height="120" viewBox="0 0 200 120">
           <g class="chalk-hint-group chalk-effect">
-            <!-- Стрелка, указывающая на кнопку -->
-            <path class="chalk-arrow-path" d="M 20 20 Q 70 20, 100 50 L 120 70 M 110 60 L 120 70 L 130 55" />
-            
+            <!-- Стрелка с кривыми Безье, указывающая на кнопку -->
+            <path class="chalk-arrow-path" d="M 20 90 C 50 90, 80 70, 110 55 C 135 42, 155 38, 175 40 L 185 41 M 175 32 L 185 41 L 177 50" />
+
             <!-- Текст над стрелкой -->
-            <text x="50" y="15" class="chalk-text">жмякай сюда</text>
+            <text x="30" y="80" class="chalk-text">жмякай сюда</text>
           </g>
         </svg>
       `;
@@ -268,19 +268,19 @@
       // Функция позиционирования
       function positionHint() {
         const rect = targetBtn.getBoundingClientRect();
-        
+
         // Цель: левый верхний угол кнопки
         const targetX = rect.left + window.scrollX;
         const targetY = rect.top + window.scrollY;
         const btnWidth = rect.width;
         const btnHeight = rect.height;
 
-        // Позиционируем wrapper так, чтобы стрелка указывала на кнопку сверху
-        const offsetX = 20; // отступ слева от кнопки
-        const offsetY = -80; // отступ сверху от кнопки
-        
+        // Позиционируем wrapper так, чтобы стрелка указывала на кнопку слева
+        const offsetX = -185; // отступ слева от кнопки (под размер SVG)
+        const offsetY = -41; // отступ сверху для центрирования
+
         // Wrapper позиционируется так, чтобы стрелка указывала на кнопку
-        const wrapperLeft = targetX - 30 + offsetX;
+        const wrapperLeft = targetX + offsetX;
         const wrapperTop = targetY + offsetY;
 
         wrapper.style.left = `${wrapperLeft}px`;
